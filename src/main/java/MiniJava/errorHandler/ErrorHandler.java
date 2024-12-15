@@ -1,14 +1,17 @@
 package MiniJava.errorHandler;
 
-/**
- * Created by Alireza on 6/28/2015.
- */
+import lombok.Setter;
 
 public class ErrorHandler {
-    public static boolean hasError = false;
+    @Setter
+    private static boolean hasError = false;
+
+    public static boolean hasError() {
+        return hasError;
+    }
 
     public static void printError(String msg) {
-        hasError = true;
         System.out.println(msg);
     }
 }
+
