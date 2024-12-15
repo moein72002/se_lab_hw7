@@ -1,35 +1,40 @@
 package MiniJava.codeGenerator;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by mohammad hosein on 6/28/2015.
  */
 
+@Getter
+@Setter
 public class Address {
-    public int num;
-    public TypeAddress Type;
-    public varType varType;
+    private int num;
+    private TypeAddress Type;
+    private varType varType;
 
     public Address(int num, varType varType, TypeAddress Type) {
-        this.num = num;
-        this.Type = Type;
-        this.varType = varType;
+        setNum(num);
+        setType(Type);
+        setVarType(varType);
     }
 
     public Address(int num, varType varType) {
-        this.num = num;
-        this.Type = TypeAddress.Direct;
-        this.varType = varType;
+        setNum(num);
+        setType(TypeAddress.Direct);
+        setVarType(varType);
     }
 
     public String toString() {
-        switch (Type) {
+        switch (getType()) {
             case Direct:
-                return num + "";
+                return getNum() + "";
             case Indirect:
-                return "@" + num;
+                return "@" + getNum();
             case Imidiate:
-                return "#" + num;
+                return "#" + getNum();
         }
-        return num + "";
+        return getNum() + "";
     }
 }

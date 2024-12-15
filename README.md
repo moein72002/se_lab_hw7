@@ -20,5 +20,9 @@
 
 # Seperate Query From Modifier
 مشاهده می کنیم که در کد اصلی صدا زدن تابع printError از ErrorHandler باعث عوض شدن استیت hasError می شود که چون این متغیر بسته به برداشت و نحوه پیاده سازی شخص دیگر می تواند سبب ایجاد side effect های ناخواسته شود. برای این که این اتفاق نیفتد طبق بازآرایی دو منطق را از هم جدا می کنیم:
-$$ screenshot from ErrorHandler.java here $$
+![img.png](screenshots/img6.png)
 متناسب با تغییرات در ErrorHandler تغییراتی را در بخش های دیگر اعمال می کنیم تا کد به درستی کار کند.
+
+# Self Encapsulated Field
+مشاهده می کنیم که کد Address.java دارای فیلد های ما به صورت public هستند. ابتدا آن ها را به صورت private در آورده و بقیه فایل ها (در اینجا صرفا codeGenerator)‌ تغییر داده تا کد را درست کنیم. در نهایت داخل خود کلاس Address.java توابع را جوری تغییر داده که صرفا از setter/getter ها استفاده کند. به این ترتیب یک بازآرایی Self Encapsulated Field انجام داده ایم.
+![img.png](screenshots/img7.png)
