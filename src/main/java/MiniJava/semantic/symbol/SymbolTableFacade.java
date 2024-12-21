@@ -35,7 +35,8 @@ public class SymbolTableFacade {
         symbolTable.addMethodParameter(className, methodName, parameterName);
     }
 
-    public void addLocalVariableToMethod(String className, String methodName, String localVariableName, SymbolType type) {
+    public void addLocalVariableToMethod(String className, String methodName, String localVariableName,
+            SymbolType type) {
         symbolTable.setLastType(type);
         symbolTable.addMethodLocalVariable(className, methodName, localVariableName);
     }

@@ -19,7 +19,8 @@ public class lexicalAnalyzer {
     public Token getNextToken() {
         while (matcher.find()) {
             Token token = matchToken();
-            if (token != null) return token;
+            if (token != null)
+                return token;
         }
         return new Token(Type.EOF, "$");
     }
@@ -43,8 +44,10 @@ public class lexicalAnalyzer {
     private Token matchToken() {
         for (Type t : Type.values()) {
             if (matcher.group(t.name()) != null) {
-                if (isComment(t)) return null;
-                if (isInvalidId(t)) return null;
+                if (isComment(t))
+                    return null;
+                if (isInvalidId(t))
+                    return null;
                 return new Token(t, matcher.group(t.name()));
             }
         }

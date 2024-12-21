@@ -14,4 +14,3 @@ public class ErrorHandler {
         System.out.println(msg);
     }
 }
-

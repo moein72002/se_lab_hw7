@@ -28,12 +28,12 @@ public class Address {
 
     public String toString() {
         switch (getType()) {
-            case Direct:
-                return getNum() + "";
-            case Indirect:
-                return "@" + getNum();
-            case Imidiate:
-                return "#" + getNum();
+        case Direct:
+            return getNum() + "";
+        case Indirect:
+            return "@" + getNum();
+        case Imidiate:
+            return "#" + getNum();
         }
         return getNum() + "";
     }

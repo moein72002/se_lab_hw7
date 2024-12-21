@@ -56,7 +56,8 @@ public class ParseTable {
         return nonTerminals;
     }
 
-    private void populateTables(String[] rows, Map<Integer, Token> terminals, Map<Integer, NonTerminal> nonTerminals) throws Exception {
+    private void populateTables(String[] rows, Map<Integer, Token> terminals, Map<Integer, NonTerminal> nonTerminals)
+            throws Exception {
         for (int i = 1; i < rows.length; i++) {
             String[] columns = rows[i].substring(1, rows[i].length() - 1).split("\",\"");
             actionTable.add(new HashMap<>());
@@ -70,7 +71,8 @@ public class ParseTable {
         }
     }
 
-    private void parseCell(String cellValue, int rowIndex, int columnIndex, Map<Integer, Token> terminals, Map<Integer, NonTerminal> nonTerminals) throws Exception {
+    private void parseCell(String cellValue, int rowIndex, int columnIndex, Map<Integer, Token> terminals,
+            Map<Integer, NonTerminal> nonTerminals) throws Exception {
         if ("acc".equals(cellValue)) {
             actionTable.get(rowIndex).put(terminals.get(columnIndex), new Action(act.accept, 0));
         } else if (terminals.containsKey(columnIndex)) {
@@ -89,7 +91,8 @@ public class ParseTable {
     public int getGotoTable(int currentState, NonTerminal variable) {
         Map<NonTerminal, Integer> stateMap = gotoTable.get(currentState);
         if (stateMap == null || !stateMap.containsKey(variable)) {
-            ErrorHandler.printError("Goto table entry not found for state " + currentState + " and variable " + variable);
+            ErrorHandler
+                    .printError("Goto table entry not found for state " + currentState + " and variable " + variable);
             return -1; // Return an invalid state to indicate an error
         }
         return stateMap.get(variable);
@@ -98,7 +101,8 @@ public class ParseTable {
     public Action getActionTable(int currentState, Token terminal) {
         Map<Token, Action> stateMap = actionTable.get(currentState);
         if (stateMap == null || !stateMap.containsKey(terminal)) {
-            ErrorHandler.printError("Action table entry not found for state " + currentState + " and terminal " + terminal);
+            ErrorHandler
+                    .printError("Action table entry not found for state " + currentState + " and terminal " + terminal);
             return null; // Return null to indicate an error
         }
         return stateMap.get(terminal);

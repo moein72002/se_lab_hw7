@@ -19,7 +19,8 @@ interface SemanticAction {
 class DefMain implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JP, new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null, null);
+        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JP,
+                new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null, null);
         String methodName = "main";
         String className = context.getSymbolStack().pop();
         context.getSymbolTable().addMethod(className, methodName, context.getMemory().getCurrentCodeBlockAddress());
@@ -48,15 +49,14 @@ class PID implements SemanticAction {
                 Symbol s = context.getSymbolTable().get(className, methodName, next.value);
                 varType t = varType.Int;
                 switch (s.type) {
-                    case Bool:
-                        t = varType.Bool;
-                        break;
-                    case Int:
-                        t = varType.Int;
-                        break;
+                case Bool:
+                    t = varType.Bool;
+                    break;
+                case Int:
+                    t = varType.Int;
+                    break;
                 }
                 context.getStack().push(new Address(s.address, t));
-
 
             } catch (Exception e) {
                 context.getStack().push(new Address(0, varType.Non));
@@ -79,12 +79,12 @@ class FPID implements SemanticAction {
         Symbol s = context.getSymbolTable().get(context.getSymbolStack().pop(), context.getSymbolStack().pop());
         varType t = varType.Int;
         switch (s.type) {
-            case Bool:
-                t = varType.Bool;
-                break;
-            case Int:
-                t = varType.Int;
-                break;
+        case Bool:
+            t = varType.Bool;
+            break;
+        case Int:
+            t = varType.Int;
+            break;
         }
         context.getStack().push(new Address(s.address, t));
     }
@@ -107,7 +107,7 @@ class IntPID implements SemanticAction {
 class StartCall implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        //TODO: method ok
+        // TODO: method ok
         context.getStack().pop();
         context.getStack().pop();
         String methodName = context.getSymbolStack().pop();
@@ -116,14 +116,14 @@ class StartCall implements SemanticAction {
         context.getCallStack().push(className);
         context.getCallStack().push(methodName);
 
-        //symbolStack.push(methodName);
+        // symbolStack.push(methodName);
     }
 }
 
 class Call implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        //TODO: method ok
+        // TODO: method ok
         String methodName = context.getCallStack().pop();
         String className = context.getCallStack().pop();
         try {
@@ -133,20 +133,29 @@ class Call implements SemanticAction {
         }
         varType t = varType.Int;
         switch (context.getSymbolTable().getMethodReturnType(className, methodName)) {
-            case Int:
-                t = varType.Int;
-                break;
-            case Bool:
-                t = varType.Bool;
-                break;
+        case Int:
+            t = varType.Int;
+            break;
+        case Bool:
+            t = varType.Bool;
+            break;
         }
         Address temp = new Address(context.getMemory().getTemp(), t);
         context.getStack().push(temp);
-        context.getMemory().add3AddressCode(Operation.ASSIGN, new Address(temp.getNum(), varType.Address, TypeAddress.Imidiate), new Address(context.getSymbolTable().getMethodReturnAddress(className, methodName), varType.Address), null);
-        context.getMemory().add3AddressCode(Operation.ASSIGN, new Address(context.getMemory().getCurrentCodeBlockAddress() + 2, varType.Address, TypeAddress.Imidiate), new Address(context.getSymbolTable().getMethodCallerAddress(className, methodName), varType.Address), null);
-        context.getMemory().add3AddressCode(Operation.JP, new Address(context.getSymbolTable().getMethodAddress(className, methodName), varType.Address), null, null);
+        context.getMemory().add3AddressCode(Operation.ASSIGN,
+                new Address(temp.getNum(), varType.Address, TypeAddress.Imidiate),
+                new Address(context.getSymbolTable().getMethodReturnAddress(className, methodName), varType.Address),
+                null);
+        context.getMemory().add3AddressCode(Operation.ASSIGN,
+                new Address(context.getMemory().getCurrentCodeBlockAddress() + 2, varType.Address,
+                        TypeAddress.Imidiate),
+                new Address(context.getSymbolTable().getMethodCallerAddress(className, methodName), varType.Address),
+                null);
+        context.getMemory().add3AddressCode(Operation.JP,
+                new Address(context.getSymbolTable().getMethodAddress(className, methodName), varType.Address), null,
+                null);
 
-        //symbolStack.pop();
+        // symbolStack.pop();
     }
 }
 
@@ -154,17 +163,17 @@ class Arg implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
         String methodName = context.getCallStack().pop();
-        //        String className = symbolStack.pop();
+        // String className = symbolStack.pop();
         try {
             Symbol s = context.getSymbolTable().getNextParam(context.getCallStack().peek(), methodName);
             varType t = varType.Int;
             switch (s.type) {
-                case Bool:
-                    t = varType.Bool;
-                    break;
-                case Int:
-                    t = varType.Int;
-                    break;
+            case Bool:
+                t = varType.Bool;
+                break;
+            case Int:
+                t = varType.Int;
+                break;
             }
             Address param = context.getStack().pop();
             if (param.getVarType() != t) {
@@ -172,7 +181,7 @@ class Arg implements SemanticAction {
             }
             context.getMemory().add3AddressCode(Operation.ASSIGN, param, new Address(s.address, t), null);
 
-            //        symbolStack.push(className);
+            // symbolStack.push(className);
 
         } catch (IndexOutOfBoundsException e) {
             ErrorHandler.printError("Too many arguments pass for method");
@@ -186,14 +195,14 @@ class Assign implements SemanticAction {
     public void execute(CodeGenerator context, Token next) {
         Address s1 = context.getStack().pop();
         Address s2 = context.getStack().pop();
-        //        try {
+        // try {
         if (s1.getVarType() != s2.getVarType()) {
             ErrorHandler.printError("The type of operands in assign is different ");
         }
-        //        }catch (NullPointerException d)
-        //        {
-        //            d.printStackTrace();
-        //        }
+        // }catch (NullPointerException d)
+        // {
+        // d.printStackTrace();
+        // }
         context.getMemory().add3AddressCode(Operation.ASSIGN, s1, s2, null);
     }
 }
@@ -237,7 +246,7 @@ class Mult implements SemanticAction {
             ErrorHandler.printError("In mult two operands must be integer");
         }
         context.getMemory().add3AddressCode(Operation.MULT, s1, s2, temp);
-        //        memory.saveMemory();
+        // memory.saveMemory();
         context.getStack().push(temp);
     }
 }
@@ -259,7 +268,8 @@ class Save implements SemanticAction {
 class While implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JPF, context.getStack().pop(), new Address(context.getMemory().getCurrentCodeBlockAddress() + 1, varType.Address), null);
+        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JPF, context.getStack().pop(),
+                new Address(context.getMemory().getCurrentCodeBlockAddress() + 1, varType.Address), null);
         context.getMemory().add3AddressCode(Operation.JP, context.getStack().pop(), null, null);
     }
 }
@@ -268,7 +278,8 @@ class JPFSave implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
         Address save = new Address(context.getMemory().saveMemory(), varType.Address);
-        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JPF, context.getStack().pop(), new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null);
+        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JPF, context.getStack().pop(),
+                new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null);
         context.getStack().push(save);
     }
 }
@@ -276,7 +287,8 @@ class JPFSave implements SemanticAction {
 class JPHere implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JP, new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null, null);
+        context.getMemory().add3AddressCode(context.getStack().pop().getNum(), Operation.JP,
+                new Address(context.getMemory().getCurrentCodeBlockAddress(), varType.Address), null, null);
     }
 }
 
@@ -407,32 +419,40 @@ class DefVar implements SemanticAction {
 class MethodReturn implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        //TODO : call ok
+        // TODO : call ok
 
         String methodName = context.getSymbolStack().pop();
         Address s = context.getStack().pop();
         SymbolType t = context.getSymbolTable().getMethodReturnType(context.getSymbolStack().peek(), methodName);
         varType temp = varType.Int;
         switch (t) {
-            case Int:
-                break;
-            case Bool:
-                temp = varType.Bool;
+        case Int:
+            break;
+        case Bool:
+            temp = varType.Bool;
         }
         if (s.getVarType() != temp) {
             ErrorHandler.printError("The type of method and return address was not match");
         }
-        context.getMemory().add3AddressCode(Operation.ASSIGN, s, new Address(context.getSymbolTable().getMethodReturnAddress(context.getSymbolStack().peek(), methodName), varType.Address, TypeAddress.Indirect), null);
-        context.getMemory().add3AddressCode(Operation.JP, new Address(context.getSymbolTable().getMethodCallerAddress(context.getSymbolStack().peek(), methodName), varType.Address), null, null);
+        context.getMemory().add3AddressCode(Operation.ASSIGN, s,
+                new Address(
+                        context.getSymbolTable().getMethodReturnAddress(context.getSymbolStack().peek(), methodName),
+                        varType.Address, TypeAddress.Indirect),
+                null);
+        context.getMemory().add3AddressCode(Operation.JP,
+                new Address(
+                        context.getSymbolTable().getMethodCallerAddress(context.getSymbolStack().peek(), methodName),
+                        varType.Address),
+                null, null);
 
-        //symbolStack.pop();
+        // symbolStack.pop();
     }
 }
 
 class DefParam implements SemanticAction {
     @Override
     public void execute(CodeGenerator context, Token next) {
-        //TODO : call Ok
+        // TODO : call Ok
         context.getStack().pop();
         String param = context.getSymbolStack().pop();
         String methodName = context.getSymbolStack().pop();
@@ -476,7 +496,7 @@ public class CodeGenerator {
     public CodeGenerator() {
         symbolTable = new SymbolTable(memory);
         fillActionMap();
-        //TODO
+        // TODO
     }
 
     private void fillActionMap() {
@@ -528,5 +548,6 @@ public class CodeGenerator {
         }
     }
 
-    public void main() { }
+    public void main() {
+    }
 }
